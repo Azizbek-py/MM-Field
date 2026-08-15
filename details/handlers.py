@@ -201,22 +201,38 @@ async def text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await log_adder("messages", context, [update.message.message_id, msg.message_id])
             return
         if value == "Ortga🔙":
+            try:
+                await context.bot.delete_message(chat_id=user_id, message_id=update.message.message_id)
+            except Exception:
+                pass
             await send_start_menu(user_id, context)
             return
 
     if stage == "stats":
         if value == "Ortga🔙":
+            try:
+                await context.bot.delete_message(chat_id=user_id, message_id=update.message.message_id)
+            except Exception:
+                pass
             await send_start_menu(user_id, context)
             return
 
     if stage in ["voice_report", "text_report"]:
         if value == "Ortga🔙":
+            try:
+                await context.bot.delete_message(chat_id=user_id, message_id=update.message.message_id)
+            except Exception:
+                pass
             await clear_report_state(user_id, context)
             await send_start_menu(user_id, context)
             return
 
     if stage == "text_wait_field":
         if value == "Ortga🔙":
+            try:
+                await context.bot.delete_message(chat_id=user_id, message_id=update.message.message_id)
+            except Exception:
+                pass
             await clear_report_state(user_id, context)
             await send_start_menu(user_id, context)
             return
@@ -241,6 +257,10 @@ async def text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if stage == "editing_field":
         if value == "Ortga🔙":
+            try:
+                await context.bot.delete_message(chat_id=user_id, message_id=update.message.message_id)
+            except Exception:
+                pass
             await log_deleter(user_id, ["messages"], context)
             await send_confirmation(user_id, context, user.get("draft") or {})
             return
@@ -356,6 +376,10 @@ async def callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
     action = query.data
 
     if action == "back":
+        try:
+            await query.message.delete()
+        except Exception:
+            pass
         await clear_report_state(user_id, context)
         await send_start_menu(user_id, context)
         return
