@@ -131,12 +131,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = get(table="users", user_id=user_id)
     if user is None:
         insert(table="users", data={"user_id": user_id, "stage": "get_login", "logged_in": False}, user_id=user_id)
-        await update.message.reply_text(text=login_mes)
+        msg = await update.message.reply_text(text=login_mes)
+        await log_deleter(user_id, ["messages", "start"], context)
+        await log_adder("messages", context, [update.message.message_id, msg.message_id])
         return
     if user.get("logged_in") is not True:
         upd(table="users", data={"stage": "get_login"}, user_id=user_id)
-        await update.message.reply_text(text=login_mes)
+        msg = await update.message.reply_text(text=login_mes)
+        await log_deleter(user_id, ["messages", "start"], context)
+        await log_adder("start", context, [update.message.message_id, msg.message_id])
         return
+    await log_deleter(user_id, ["messages", "start"], context)
     await send_start_menu(user_id, context)
 
 async def text(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -170,7 +175,8 @@ async def text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if admin:
             upd(table="users", data={"logged_in": True, "stage": "start"}, user_id=user_id)
             await log_deleter(user_id, ["messages"], context)
-            await update.message.reply_text(text=start_mes, reply_markup=ReplyKeyboardMarkup(keyboard=start_but, resize_keyboard=True))
+            msg = await update.message.reply_text(text=start_mes, reply_markup=ReplyKeyboardMarkup(keyboard=start_but, resize_keyboard=True))
+            await log_adder("messages", context, [update.message.message_id, msg.message_id])
             return
         upd(table="users", data={"stage": "get_login"}, user_id=user_id)
         await log_deleter(user_id, ["messages"], context)
