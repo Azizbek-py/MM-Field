@@ -142,8 +142,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await log_deleter(user_id, ["messages", "start"], context)
         await log_adder("messages", context, [update.message.message_id, msg.message_id])
         return
-    await log_deleter(user_id, ["messages", "start"], context)
     await send_start_menu(user_id, context)
+    await log_adder("start", context, [update.message.message_id])
 
 async def text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     value = update.message.text.strip()
