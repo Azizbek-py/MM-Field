@@ -1,0 +1,20 @@
+# Environment and secrets
+.env
+.env.*
+credentials.json
+
+# Local data
+details/database/base.json
+
+# Python cache and virtualenvs
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
