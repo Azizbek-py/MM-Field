@@ -12,6 +12,7 @@ from .messages import *
 from .database.db import insert, get, upd
 from .ai import stt, analyze_query2
 import logging
+from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +107,7 @@ def get_field_prompt(field_key, step_index=None):
 
 async def send_stats(user_id, context):
     values = sheet.get_all_values()
-    now = datetime.now()
+    now = datetime.now(ZoneInfo("Asia/Tashkent"))
     today = now.strftime("%d.%m.%Y")
     month = now.strftime("%m.%Y")
     today_count = 0
@@ -455,7 +456,7 @@ def get_admin_profile(login):
 
 
 def save_data(address, orientir, client_code, last_visit, stand_code, comment, conclusion, analyst_name, analyst_phone, media_ids=None):
-    now = datetime.now()
+    now = datetime.now(ZoneInfo("Asia/Tashkent"))
     photos = media_ids or []
     photo_1 = photos[0] if len(photos) > 0 else ""
     photo_2 = photos[1] if len(photos) > 1 else ""
