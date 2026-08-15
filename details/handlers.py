@@ -139,7 +139,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         upd(table="users", data={"stage": "get_login"}, user_id=user_id)
         msg = await update.message.reply_text(text=login_mes)
         await log_deleter(user_id, ["messages", "start"], context)
-        await log_adder("start", context, [update.message.message_id, msg.message_id])
+        await log_adder("messages", context, [update.message.message_id, msg.message_id])
         return
     await log_deleter(user_id, ["messages", "start"], context)
     await send_start_menu(user_id, context)
@@ -174,6 +174,7 @@ async def text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         admin = next((item for item in admins if item.get("login") == login and str(item.get("parol")) == value), None)
         if admin:
             upd(table="users", data={"logged_in": True, "stage": "start"}, user_id=user_id)
+            await log_adder("messages", context, [update.message.message_id])
             await log_deleter(user_id, ["messages"], context)
             msg = await update.message.reply_text(text=start_mes, reply_markup=ReplyKeyboardMarkup(keyboard=start_but, resize_keyboard=True))
             await log_adder("messages", context, [update.message.message_id, msg.message_id])
@@ -198,9 +199,11 @@ async def text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await log_adder("messages", context, [update.message.message_id, msg.message_id])
             return
         if value == "Hisobot📊":
+            await log_adder("messages", context, [update.message.message_id])
             await send_stats(user_id, context)
             return
         if value == "Chiqish🔴":
+            await log_adder("messages", context, [update.message.message_id])
             upd(table="users", data={"logged_in": False, "stage": "get_login", "draft": {}}, user_id=user_id)
             await log_deleter(user_id, ["messages"], context)
             msg = await update.message.reply_text(text=login_mes)
